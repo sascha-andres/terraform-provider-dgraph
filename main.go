@@ -8,7 +8,19 @@ import (
 
 func Provider() *schema.Provider {
 	return &schema.Provider{
-		ResourcesMap: map[string]*schema.Resource{},
+		Schema: map[string]*schema.Schema{
+			"server": &schema.Schema{
+				Type:        schema.TypeString,
+				Optional:    false,
+				Required:    true,
+				DefaultFunc: schema.EnvDefaultFunc("DGRAPH_SERVER", ""),
+				Description: "Connect to this dgraph server",
+			},
+		},
+
+		ResourcesMap: map[string]*schema.Resource{
+			"dgraph_predicate": resourcePredicate(),
+		},
 	}
 }
 
