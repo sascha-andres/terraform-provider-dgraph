@@ -90,3 +90,7 @@ fabric.properties
 
 terraform-provider-dgraph
 .terraform/
+out.txt
+terraform.tfstate
+terraform.tfstate.backup
+crash.log
