@@ -9,3 +9,7 @@ start: ## run a local dgraph server
 
 stop: ## stop docker images
 	docker stop dgraph
+
+test: ## Run terraform apply
+	cd terraform && terraform init
+	cd terraform && terraform apply

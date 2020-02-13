@@ -1,4 +1,4 @@
-package main
+package resources
 
 import (
 	"github.com/dgraph-io/dgo/v2"
@@ -7,7 +7,8 @@ import (
 	"log"
 )
 
-func newClient() *dgo.Dgraph {
+// NewClient returns a dgraph client
+func NewClient() *dgo.Dgraph {
 	// Dial a gRPC connection. The address to dial to can be configured when
 	// setting up the dgraph cluster.
 	d, err := grpc.Dial("localhost:9080", grpc.WithInsecure())
@@ -18,18 +19,4 @@ func newClient() *dgo.Dgraph {
 	return dgo.NewDgraphClient(
 		api.NewDgraphClient(d),
 	)
-}
-
-type resourceData struct {
-	Schema []struct {
-		Name      string `json:"predicate"`
-		Type      string
-		Index     bool
-		Reverse   string
-		Tokenizer []string
-		List      bool
-		Count     bool
-		Upsert    string
-		Lang      bool
-	}
 }

@@ -1,4 +1,4 @@
-package main
+package dtype
 
 import (
 	"context"
@@ -6,11 +6,12 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 )
 
-func resourcePredicateDelete(d *schema.ResourceData, m interface{}) error {
-	predicateName := d.Get("name").(string)
+func Delete(d *schema.ResourceData, m interface{}) error {
+	typeName := d.Get("name").(string)
 
 	err := client.Alter(context.Background(), &api.Operation{
-		DropAttr: predicateName,
+		DropOp:   api.Operation_TYPE,
+		DropAttr: typeName,
 	})
 	if err != nil {
 		return err

@@ -20,6 +20,7 @@ func Provider() *schema.Provider {
 
 		ResourcesMap: map[string]*schema.Resource{
 			"dgraph_predicate": resourcePredicate(),
+			"dgraph_type":      resourceType(),
 		},
 	}
 }

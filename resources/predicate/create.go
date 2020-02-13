@@ -1,4 +1,4 @@
-package main
+package predicate
 
 import (
 	"context"
@@ -7,7 +7,9 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 )
 
-func resourcePredicateCreate(d *schema.ResourceData, m interface{}) error {
+const iDPredicateTemplate = "predicate_%s"
+
+func Create(d *schema.ResourceData, m interface{}) error {
 	predicateName := d.Get("name").(string)
 	predicateType := d.Get("type").(string)
 	isArray := d.Get("array").(bool)
@@ -15,7 +17,7 @@ func resourcePredicateCreate(d *schema.ResourceData, m interface{}) error {
 		predicateType = fmt.Sprintf("[%s]", predicateType)
 	}
 	predicateIndex := d.Get("index").(bool)
-	predicateTokenizer := ""
+	predicateTokenizer := d.Get("tokenizer").(string)
 	if predicateIndex && "" == predicateTokenizer {
 		return fmt.Errorf("tokenizer must be set for %s when index is true", predicateName)
 	}
@@ -26,7 +28,7 @@ func resourcePredicateCreate(d *schema.ResourceData, m interface{}) error {
 	predicateLang := ""
 	if d.Get("lang").(bool) {
 		if predicateType != "string" || (predicateType == "string" && isArray) {
-			return fmt.Errorf("lang for %s may only be set if of type string", predicateName)
+			return fmt.Errorf("lang for %s may only be set if of dtype string", predicateName)
 		}
 		predicateLang = "@lang"
 	}
@@ -45,7 +47,7 @@ func resourcePredicateCreate(d *schema.ResourceData, m interface{}) error {
 		return err
 	}
 
-	d.SetId(predicateName)
+	d.SetId(fmt.Sprintf(iDPredicateTemplate, predicateName))
 
-	return resourcePredicateRead(d, m)
+	return Read(d, m)
 }
