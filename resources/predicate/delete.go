@@ -6,6 +6,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 )
 
+// Delete removes a predicate from Dgraph
 func Delete(d *schema.ResourceData, m interface{}) error {
 	predicateName := d.Get("name").(string)
 

@@ -7,6 +7,7 @@ import (
 
 var client *dgo.Dgraph
 
+// init used to create a Dgraph client
 func init() {
 	client = resources.NewClient()
 }

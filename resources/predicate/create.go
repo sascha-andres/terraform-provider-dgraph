@@ -9,6 +9,7 @@ import (
 
 const iDPredicateTemplate = "predicate_%s"
 
+// Create adds a predicate to Dgraph
 func Create(d *schema.ResourceData, m interface{}) error {
 	predicateName := d.Get("name").(string)
 	predicateType := d.Get("type").(string)

@@ -6,11 +6,11 @@ import (
 	"fmt"
 	"github.com/dgraph-io/dgo/v2/protos/api"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
-	"io/ioutil"
 	"livingit.de/code/tf-dgraph/resources"
 	"livingit.de/code/tf-dgraph/resources/predicate"
 )
 
+// Read retrieves information about a type from Dgraph
 func Read(d *schema.ResourceData, m interface{}) error {
 
 	typeName := d.Id()
@@ -41,17 +41,28 @@ func Read(d *schema.ResourceData, m interface{}) error {
 
 	d.Set("name", data.Types[0].Name)
 
+	fields, err := adjustForChanges(d, data)
+	if err != nil {
+		return err
+	}
+	d.Set("fields", fields)
+
+	return nil
+}
+
+// adjustForChanges compares local config with remote state
+func adjustForChanges(d *schema.ResourceData, data resources.ResourceTypeData) (map[string]interface{}, error) {
 	fields := d.Get("fields").(map[string]interface{})
 	for _, v := range data.Types[0].Fields {
 		if _, ok := fields[v.Name]; !ok { // expected field not found
 			t, err := getPredicateType(v.Name)
 			if err != nil {
-				return err
+				return nil, err
 			}
 			fields[v.Name] = t
 		}
 	}
-	for k, _ := range fields {
+	for k := range fields {
 		n := ""
 		for _, f := range data.Types[0].Fields {
 			if f.Name == k {
@@ -64,28 +75,12 @@ func Read(d *schema.ResourceData, m interface{}) error {
 		} else {
 			t, err := getPredicateType(n)
 			if err != nil {
-				return err
+				return nil, err
 			}
 			fields[n] = t
 		}
 	}
-	d.Set("fields", fields)
-
-	ioutil.WriteFile(fmt.Sprintf("out-%s-fields.txt", typeName), []byte(fmt.Sprintf("%#v", fields)), 0600)
-
-	return nil
-
-	/*
-		d.Set("type", data.Schema[0].Type)
-		d.Set("array", data.Schema[0].List)
-		d.Set("index", data.Schema[0].Index)
-		if data.Schema[0].Index {
-			d.Set("tokenizer", data.Schema[0].Tokenizer)
-		}
-		d.Set("edge_count", data.Schema[0].Count)
-		d.Set("lang", data.Schema[0].Lang)
-
-		return nil*/
+	return fields, nil
 }
 
 // getPredicateType is a helper to get the type of a predicate

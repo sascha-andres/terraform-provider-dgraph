@@ -5,6 +5,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 )
 
+// Read returns data about a predicate from Dgraph
 func Read(d *schema.ResourceData, m interface{}) error {
 	predicateName := d.Id()
 

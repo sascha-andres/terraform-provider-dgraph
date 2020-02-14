@@ -6,6 +6,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 )
 
+// Delete removes a type from Dgraph
 func Delete(d *schema.ResourceData, m interface{}) error {
 	typeName := d.Get("name").(string)
 

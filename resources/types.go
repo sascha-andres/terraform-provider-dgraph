@@ -16,6 +16,7 @@ type (
 		}
 	}
 
+	// ResourceTypeData is a container returned from Dgraph about a type
 	ResourceTypeData struct {
 		Types []struct {
 			Name   string

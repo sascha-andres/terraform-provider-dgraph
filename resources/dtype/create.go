@@ -9,6 +9,7 @@ import (
 
 const iDTypeTemplate = "type_%s"
 
+// Create adds a type to Dgraph
 func Create(d *schema.ResourceData, m interface{}) error {
 
 	typeName := d.Get("name").(string)
