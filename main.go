@@ -10,7 +10,7 @@ import (
 func Provider() *schema.Provider {
 	return &schema.Provider{
 		Schema: map[string]*schema.Schema{
-			"server": &schema.Schema{
+			"server": {
 				Type:        schema.TypeString,
 				Optional:    false,
 				Required:    true,
