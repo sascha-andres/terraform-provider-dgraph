@@ -18,6 +18,30 @@ func Provider() *schema.Provider {
 				DefaultFunc: schema.EnvDefaultFunc("DGRAPH_SERVER", "localhost:9080"),
 				Description: "Connect to this dgraph server",
 			},
+			"insecure_skip_verify": {
+				Type:        schema.TypeBool,
+				Optional:    true,
+				Default:     true,
+				Description: "Whether the client should verify the server's certificate chain and host name",
+			},
+			"client_certificate": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				Default:     "",
+				Description: "PEM-encoded client certificate for TLS authentication.",
+			},
+			"client_key": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				Default:     "",
+				Description: "PEM-encoded client certificate key for TLS authentication.",
+			},
+			"ca_certificate": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				Default:     "",
+				Description: "PEM-encoded root certificates bundle for TLS authentication.",
+			},
 		},
 
 		ResourcesMap: map[string]*schema.Resource{
