@@ -4,6 +4,8 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+
+	"github.com/dgraph-io/dgo/v2"
 	"github.com/dgraph-io/dgo/v2/protos/api"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	"livingit.de/code/tf-dgraph/resources"
@@ -12,6 +14,10 @@ import (
 
 // Read retrieves information about a type from Dgraph
 func Read(d *schema.ResourceData, m interface{}) error {
+	client, err := m.(resources.Meta).Client()
+	if err != nil {
+		return err
+	}
 
 	typeName := d.Id()
 
@@ -41,7 +47,7 @@ func Read(d *schema.ResourceData, m interface{}) error {
 
 	d.Set("name", data.Types[0].Name)
 
-	fields, err := adjustForChanges(d, data)
+	fields, err := adjustForChanges(d, data, client)
 	if err != nil {
 		return err
 	}
@@ -51,11 +57,11 @@ func Read(d *schema.ResourceData, m interface{}) error {
 }
 
 // adjustForChanges compares local config with remote state
-func adjustForChanges(d *schema.ResourceData, data resources.ResourceTypeData) (map[string]interface{}, error) {
+func adjustForChanges(d *schema.ResourceData, data resources.ResourceTypeData, client *dgo.Dgraph) (map[string]interface{}, error) {
 	fields := d.Get("fields").(map[string]interface{})
 	for _, v := range data.Types[0].Fields {
 		if _, ok := fields[v.Name]; !ok { // expected field not found
-			t, err := getPredicateType(v.Name)
+			t, err := getPredicateType(v.Name, client)
 			if err != nil {
 				return nil, err
 			}
@@ -73,7 +79,7 @@ func adjustForChanges(d *schema.ResourceData, data resources.ResourceTypeData) (
 		if n == "" { // locally field is expected, remote non existent
 			delete(fields, n)
 		} else {
-			t, err := getPredicateType(n)
+			t, err := getPredicateType(n, client)
 			if err != nil {
 				return nil, err
 			}
@@ -84,8 +90,8 @@ func adjustForChanges(d *schema.ResourceData, data resources.ResourceTypeData) (
 }
 
 // getPredicateType is a helper to get the type of a predicate
-func getPredicateType(predicateName string) (string, error) {
-	data, err := predicate.GetPredicate(predicateName)
+func getPredicateType(predicateName string, client *dgo.Dgraph) (string, error) {
+	data, err := predicate.GetPredicate(predicateName, client)
 	if err != nil {
 		return "", err
 	}

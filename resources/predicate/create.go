@@ -3,14 +3,21 @@ package predicate
 import (
 	"context"
 	"fmt"
+
 	"github.com/dgraph-io/dgo/v2/protos/api"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"livingit.de/code/tf-dgraph/resources"
 )
 
 const iDPredicateTemplate = "predicate_%s"
 
 // Create adds a predicate to Dgraph
 func Create(d *schema.ResourceData, m interface{}) error {
+	client, err := m.(resources.Meta).Client()
+	if err != nil {
+		return err
+	}
+
 	predicateName := d.Get("name").(string)
 	predicateType := d.Get("type").(string)
 	isArray := d.Get("array").(bool)
@@ -40,7 +47,7 @@ func Create(d *schema.ResourceData, m interface{}) error {
 		predicateTokenizer = ""
 	}
 
-	err := client.Alter(context.Background(), &api.Operation{
+	err = client.Alter(context.Background(), &api.Operation{
 		Schema: fmt.Sprintf("%s: %s %s %s %s .", predicateName, predicateType, predicateTokenizer, predicateLang, predicateCount),
 	})
 

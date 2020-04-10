@@ -4,6 +4,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	"github.com/hashicorp/terraform-plugin-sdk/plugin"
 	"github.com/hashicorp/terraform-plugin-sdk/terraform"
+	"livingit.de/code/tf-dgraph/resources"
 )
 
 // Provider returns a provider for terraform
@@ -14,7 +15,7 @@ func Provider() *schema.Provider {
 				Type:        schema.TypeString,
 				Optional:    false,
 				Required:    true,
-				DefaultFunc: schema.EnvDefaultFunc("DGRAPH_SERVER", ""),
+				DefaultFunc: schema.EnvDefaultFunc("DGRAPH_SERVER", "localhost:9080"),
 				Description: "Connect to this dgraph server",
 			},
 		},
@@ -23,7 +24,16 @@ func Provider() *schema.Provider {
 			"dgraph_predicate": resourcePredicate(),
 			"dgraph_type":      resourceType(),
 		},
+
+		ConfigureFunc: providerConfigure,
 	}
+}
+
+func providerConfigure(d *schema.ResourceData) (interface{}, error) {
+	m := resources.Meta{
+		Client: resources.DeferredGetClient(d),
+	}
+	return m, nil
 }
 
 func main() {
