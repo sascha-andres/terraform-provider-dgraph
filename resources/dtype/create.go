@@ -3,14 +3,20 @@ package dtype
 import (
 	"context"
 	"fmt"
+
 	"github.com/dgraph-io/dgo/v2/protos/api"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"livingit.de/code/tf-dgraph/resources"
 )
 
 const iDTypeTemplate = "type_%s"
 
 // Create adds a type to Dgraph
 func Create(d *schema.ResourceData, m interface{}) error {
+	client, err := m.(resources.Meta).Client()
+	if err != nil {
+		return err
+	}
 
 	typeName := d.Get("name").(string)
 	typeFields := d.Get("fields").(map[string]interface{})
@@ -25,7 +31,7 @@ func Create(d *schema.ResourceData, m interface{}) error {
 	}
 	typeDefinition := fmt.Sprintf("type %s {\n%s\n}", typeName, fieldList)
 
-	err := client.Alter(context.Background(), &api.Operation{
+	err = client.Alter(context.Background(), &api.Operation{
 		Schema: typeDefinition,
 	})
 
