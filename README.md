@@ -59,6 +59,7 @@ As there is now a reference to the predicate it runs well.
 
 |Version|Description|
 |---|---|
+|0.1.1|address CVE-2022-26945|
 |0.1.0|initial version with support for:|
 ||- predicates|
 ||- types|
