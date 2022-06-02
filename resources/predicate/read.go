@@ -2,10 +2,18 @@ package predicate
 
 import (
 	"fmt"
+
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"livingit.de/code/tf-dgraph/resources"
 )
 
+// Read returns data about a predicate from Dgraph
 func Read(d *schema.ResourceData, m interface{}) error {
+	client, err := m.(resources.Meta).Client()
+	if err != nil {
+		return err
+	}
+
 	predicateName := d.Id()
 
 	if len(predicateName) < 11 {
@@ -13,7 +21,7 @@ func Read(d *schema.ResourceData, m interface{}) error {
 	}
 	predicateName = predicateName[10:]
 
-	data, err := GetPredicate(predicateName)
+	data, err := GetPredicate(predicateName, client)
 	if err != nil {
 		return err
 	}

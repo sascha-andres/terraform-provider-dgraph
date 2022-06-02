@@ -16,36 +16,36 @@ func resourcePredicate() *schema.Resource {
 		Delete: predicate.Delete,
 
 		Schema: map[string]*schema.Schema{
-			"name": &schema.Schema{
+			"name": {
 				Type:     schema.TypeString,
 				Required: true,
 			},
-			"type": &schema.Schema{
+			"type": {
 				Type:     schema.TypeString,
 				Required: true,
 			},
-			"array": &schema.Schema{
+			"array": {
 				Type:     schema.TypeBool,
 				Required: false,
 				Optional: true,
 			},
-			"lang": &schema.Schema{
+			"lang": {
 				Type:     schema.TypeBool,
 				Required: false,
 				Optional: true,
 			},
-			"index": &schema.Schema{
+			"index": {
 				Type:     schema.TypeBool,
 				Required: false,
 				Optional: true,
 			},
-			"tokenizer": &schema.Schema{
+			"tokenizer": {
 				Type:        schema.TypeString,
 				Required:    false,
 				Optional:    true,
 				Description: "Required when index is true",
 			},
-			"edge_count": &schema.Schema{
+			"edge_count": {
 				Type:     schema.TypeBool,
 				Required: false,
 				Optional: true,

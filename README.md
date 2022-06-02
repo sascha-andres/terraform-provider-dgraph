@@ -1,3 +1,5 @@
+[![codebeat badge](https://codebeat.co/badges/2156b7fc-578f-4e09-821f-abb6d0a54d5d)](https://codebeat.co/projects/github-com-sascha-andres-terraform-provider-dgraph-develop) [![Go Report Card](https://goreportcard.com/badge/github.com/sascha-andres/terraform-provider-dgraph)](https://goreportcard.com/report/github.com/sascha-andres/terraform-provider-dgraph)
+
 # terraform provider for Dgraph
 
 This is a terraform provider to manage predicates and types within a dgraph instance
@@ -57,6 +59,7 @@ As there is now a reference to the predicate it runs well.
 
 |Version|Description|
 |---|---|
+|0.1.1|address CVE-2022-26945|
 |0.1.0|initial version with support for:|
 ||- predicates|
 ||- types|

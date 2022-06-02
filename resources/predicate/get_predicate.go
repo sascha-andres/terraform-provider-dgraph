@@ -4,12 +4,14 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+
+	"github.com/dgraph-io/dgo/v2"
 	"github.com/dgraph-io/dgo/v2/protos/api"
 	"livingit.de/code/tf-dgraph/resources"
 )
 
 // GetPredicate returns data about a single predicate
-func GetPredicate(predicateName string) (*resources.ResourcePredicateData, error) {
+func GetPredicate(predicateName string, client *dgo.Dgraph) (*resources.ResourcePredicateData, error) {
 	schemaQuery := fmt.Sprintf(`schema(pred: [%s]) {
   type
   index

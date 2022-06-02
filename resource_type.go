@@ -13,11 +13,11 @@ func resourceType() *schema.Resource {
 		Delete: dtype.Delete,
 
 		Schema: map[string]*schema.Schema{
-			"name": &schema.Schema{
+			"name": {
 				Type:     schema.TypeString,
 				Required: true,
 			},
-			"fields": &schema.Schema{
+			"fields": {
 				Type:     schema.TypeMap,
 				Required: true,
 			},
